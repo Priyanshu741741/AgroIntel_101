@@ -362,51 +362,33 @@ def model_info():
         'health_categories': health_categories
     })
 
-@app.route('/api/chatbot', methods=['POST'])
-def chat():
-    if not CHATBOT_ENABLED:
-        return jsonify({
-            'response': "I'm sorry, the AI chatbot is currently unavailable. Please try again later.",
-            'source': "error"
-        }), 503
-    
-    data = request.json
-    if not data or 'message' not in data:
-        return jsonify({'error': 'No message provided'}), 400
-    
-    user_message = data['message']
-    print(f"Received chatbot message: {user_message}")
-    
+@app.route('/api/chat', methods=['POST'])
+def chat_api():
     try:
-        # Try the Gemini chatbot first
-        response = gemini_chatbot.get_response(user_message)
-        
-        # If there's an error, fall back to the simple chatbot
-        if response['source'] == 'error':
-            print("Gemini API error, falling back to simple chatbot")
-            response = simple_chatbot.get_response(user_message)
-        
-        print(f"Sending response: {response['response'][:50]}... (source: {response['source']})")
-        
-        return jsonify({
-            'response': response['response'],
-            'source': response['source']
-        })
-    except Exception as e:
-        print(f"Error processing chatbot request: {e}")
-        traceback.print_exc()
-        
-        # Use simple chatbot as fallback for any errors
-        try:
-            response = simple_chatbot.get_response(user_message)
+        if not CHATBOT_ENABLED:
+            simple_response = simple_chatbot.get_response(request.json.get('message', ''))
             return jsonify({
-                'response': response['response'],
-                'source': 'fallback'
+                'response': simple_response,
+                'source': 'simple-chatbot'
+            })
+            
+        # Try to use Gemini chatbot if available
+        response_data = gemini_chatbot.get_response(request.json.get('message', ''))
+        return jsonify(response_data)
+        
+    except Exception as e:
+        traceback.print_exc()
+        # Fallback to simple chatbot if Gemini fails
+        try:
+            simple_response = simple_chatbot.get_response(request.json.get('message', ''))
+            return jsonify({
+                'response': simple_response,
+                'source': 'simple-chatbot'
             })
         except:
             return jsonify({
-                'response': "I'm sorry, I'm having trouble processing your request right now.",
-                'source': "error"
+                'response': f"I'm sorry, I encountered an error: {str(e)}",
+                'source': 'error'
             }), 500
 
 if __name__ == '__main__':
@@ -425,4 +407,4 @@ if __name__ == '__main__':
         print("Warning: Chatbot functionality is disabled due to missing modules.")
     
     print("Starting Flask server...")
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Alert } from 'react-bootstrap';
-import ImageUpload from '../components/ImageUpload';
-import AnalysisResults from '../components/AnalysisResults';
+import { Container, Alert } from 'react-bootstrap';
+import CropAnalysis from '../components/CropAnalysis';
 import { getModelInfo } from '../services/api';
+import './DashboardPage.css';
 
 const DashboardPage = () => {
-  const [analysisResults, setAnalysisResults] = useState(null);
-  const [analyzedImageUrl, setAnalyzedImageUrl] = useState(null);
   const [modelStatus, setModelStatus] = useState({ loading: true, error: null });
 
   useEffect(() => {
@@ -25,36 +23,23 @@ const DashboardPage = () => {
     checkModelStatus();
   }, []);
 
-  const handleAnalysisComplete = (results, imageUrl) => {
-    setAnalysisResults(results);
-    setAnalyzedImageUrl(imageUrl);
-  };
-
   return (
-    <Container className="py-4">
-      <h2 className="mb-4">Crop Analysis Dashboard</h2>
-      
-      {modelStatus.error && (
-        <Alert variant="warning" className="mb-4">
-          {modelStatus.error}
-        </Alert>
-      )}
-      
-      <Row>
-        <Col lg={5} className="mb-4">
-          <ImageUpload onAnalysisComplete={handleAnalysisComplete} />
-        </Col>
+    <div className="agrointel-dashboard">
+      <Container>
+        <div className="dashboard-header">
+          <h1 className="dashboard-title">Crop Analysis</h1>
+          <p className="dashboard-subtitle">Upload photos of your crops and get instant AI analysis</p>
+        </div>
         
-        <Col lg={7}>
-          {analysisResults && (
-            <AnalysisResults 
-              results={analysisResults} 
-              imageUrl={analyzedImageUrl} 
-            />
-          )}
-        </Col>
-      </Row>
-    </Container>
+        {modelStatus.error && (
+          <Alert variant="warning" className="mb-4">
+            {modelStatus.error}
+          </Alert>
+        )}
+        
+        <CropAnalysis />
+      </Container>
+    </div>
   );
 };
 

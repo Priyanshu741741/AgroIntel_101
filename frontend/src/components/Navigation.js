@@ -1,26 +1,28 @@
 import React from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import './Navigation.css';
 
 const Navigation = () => {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container>
-        <Navbar.Brand as={Link} to="/">Crop Monitoring App</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
-            <Nav.Link as={Link} to="/weather">Weather</Nav.Link>
-            <Nav.Link as={Link} to="/treatment-timeline">Treatment Timeline</Nav.Link>
-            <Nav.Link as={Link} to="/soil-analysis">Soil Analysis</Nav.Link>
-            <Nav.Link as={Link} to="/marketplace">Marketplace</Nav.Link>
-            <Nav.Link as={Link} to="/chatbot">AI Assistant</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
+    <header className="agrointel-header">
+      <Container fluid className="header-container">
+        <Link to="/" className="logo">AgroIntel</Link>
+        
+        <div className="navigation-links">
+          <Link to="/dashboard" className="nav-item">Crop Analysis</Link>
+          <Link to="/soil-analysis" className="nav-item">Soil Analysis</Link>
+          <Link to="/weather" className="nav-item">Weather</Link>
+          <Link to="/marketplace" className="nav-item">Marketplace</Link>
+          <Link to="/chatbot" className="nav-item">AI Assistant</Link>
+        </div>
+        
+        <div className="auth-buttons">
+          <Link to="/login" className="login-btn">Log in</Link>
+          <Link to="/signup" className="signup-btn">Sign up free</Link>
+        </div>
       </Container>
-    </Navbar>
+    </header>
   );
 };
 

@@ -35,9 +35,9 @@ const SplashScreen = () => {
   return (
     <div className="splash-screen">
       <h1 className="splash-logo-header">
-        <span className={`splash-logo ${logoActive ? 'active' : ''} ${logoFade ? 'fade' : ''}`}>Crop</span>
-        <span className={`splash-logo ${logoActive ? 'active' : ''} ${logoFade ? 'fade' : ''}`} style={{ animationDelay: '0.4s' }}>Monitoring</span>
-        <span className={`splash-logo ${logoActive ? 'active' : ''} ${logoFade ? 'fade' : ''}`} style={{ animationDelay: '0.8s' }}>App</span>
+        <span className={`splash-logo ${logoActive ? 'active' : ''} ${logoFade ? 'fade' : ''}`}> </span>
+        <span className={`splash-logo ${logoActive ? 'active' : ''} ${logoFade ? 'fade' : ''}`} style={{ animationDelay: '0.4s' }}>AgroIntel</span>
+        <span className={`splash-logo ${logoActive ? 'active' : ''} ${logoFade ? 'fade' : ''}`} style={{ animationDelay: '0.8s' }}> </span>
       </h1>
     </div>
   );

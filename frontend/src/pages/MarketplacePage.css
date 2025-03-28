@@ -1,0 +1,179 @@
+.agrointel-marketplace {
+  padding: 60px 0;
+  min-height: calc(100vh - 70px);
+  background-color: var(--background-color);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add marketplace grid pattern animation in the background */
+.agrointel-marketplace::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(90deg, rgba(76, 175, 80, 0.03) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(76, 175, 80, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: marketplaceGridMove 30s linear infinite;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+@keyframes marketplaceGridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+.marketplace-title {
+  font-size: 3rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 10px;
+  color: var(--text-color) !important;
+  position: relative;
+  z-index: 1;
+}
+
+.animate-text {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-container {
+  position: relative;
+  z-index: 1;
+}
+
+.animate-in {
+  animation: fadeIn 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.marketplace-button {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.marketplace-button:hover {
+  background-color: var(--accent-color) !important;
+  color: var(--text-color) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+/* Override Material UI tab colors */
+.MuiTab-root {
+  color: var(--text-color) !important;
+  font-weight: 500 !important;
+}
+
+.MuiTab-root.Mui-selected {
+  color: var(--primary-color) !important;
+  font-weight: 600 !important;
+}
+
+.MuiTabs-indicator {
+  background-color: var(--primary-color) !important;
+}
+
+/* Override card styling */
+.MuiCard-root {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s ease !important;
+}
+
+.MuiCard-root:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.supplier-card-container {
+  animation: cardFadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-button {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.contact-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: -1;
+  transition: all 0.4s ease;
+}
+
+.contact-button:hover::after {
+  left: 100%;
+}
+
+/* Button styling */
+.MuiButton-containedPrimary {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.MuiButton-containedPrimary:hover {
+  background-color: var(--accent-color) !important;
+  color: var(--text-color) !important;
+}
+
+@media (max-width: 768px) {
+  .marketplace-title {
+    font-size: 2.5rem !important;
+  }
+} 

@@ -1,24 +1,25 @@
 :root {
-  --primary-color: #00ff9d;
-  --secondary-color: #4a4a4a;
-  --accent-color: #39FF14;
-  --background-color: #0a0a0a;
-  --text-color: #ffffff;
-  --bg-dark: #0a0a0a;
-  --bg-darker: #050505;
-  --bg-card: #1a1a1a;
-  --text-light: #ffffff;
-  --text-dim: rgba(255, 255, 255, 0.87);
-  --text-muted: rgba(255, 255, 255, 0.6);
-  --gradient-green: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  --primary-color: #27642a;
+  --secondary-color: #ccff00;
+  --accent-color: #d1ff50;
+  --background-color: #ffffff;
+  --text-color: #27282c;
+  --bg-dark: #ffffff;
+  --bg-darker: #f8f8f8;
+  --bg-card: #ffffff;
+  --text-light: #27282c;
+  --text-dim: rgba(39, 40, 44, 0.87);
+  --text-muted: rgba(39, 40, 44, 0.6);
+  --gradient-green: linear-gradient(135deg, #27642a, #39874d);
   --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-strong: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --button-dark: #27282c;
 }
 
 /* General Styles */
 body {
   margin: 0;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--background-color);
@@ -27,11 +28,11 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Bebas Neue", sans-serif;
-  letter-spacing: 1px;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight: 700;
   line-height: 1.2;
   margin-bottom: 1rem;
-  color: var(--primary-color);
+  color: var(--text-color);
 }
 
 code {
@@ -44,8 +45,8 @@ code {
   display: flex;
   flex-direction: column;
   animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--bg-darker);
-  color: var(--text-light);
+  background: var(--background-color);
+  color: var(--text-color);
 }
 
 /* Animations */
@@ -63,6 +64,95 @@ code {
   0% { transform: scale(0.9); opacity: 0; }
   50% { transform: scale(1.05); opacity: 0.7; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* Global text animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Apply animations to page headers */
+.agrointel-crop .crop-header h1,
+.agrointel-soil .soil-header h1,
+.agrointel-dashboard .dashboard-header h1,
+.agrointel-marketplace .marketplace-title,
+.agrointel-chatbot .chatbot-header h1,
+.weather-header h1 {
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+}
+
+.agrointel-crop .crop-header p,
+.agrointel-soil .soil-header p,
+.agrointel-dashboard .dashboard-header p,
+.agrointel-chatbot .chatbot-header p,
+.weather-header p {
+  animation: fadeInUp 1s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+/* Dashboard card animations */
+.upload-container, .results-container, .crop-container, .soil-container {
+  animation: fadeInUp 0.8s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
+/* Add subtle hover animations to cards and interactive elements */
+.feature-card:hover {
+  transform: translateY(-10px);
+  transition: transform 0.3s ease;
+}
+
+.soil-type, .crop-type, .health-status, .confidence {
+  transition: all 0.3s ease;
+}
+
+.soil-type:hover, .crop-type:hover, .health-status:hover, .confidence:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* Navigation */
@@ -161,13 +251,13 @@ code {
 
 /* Modern Typography */
 h1, h2, h3, h4, h5, h6 {
-  color: #ffffff;
+  color: var(--text-color);
   font-weight: 600;
   letter-spacing: -0.5px;
 }
 
 .text-light {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--text-color) !important;
 }
 
 /* Modern Button Design */
@@ -210,9 +300,9 @@ input:focus, select:focus, textarea:focus {
 
 /* Dark Theme Background */
 .App {
-  background: #141414;
+  background: var(--background-color);
   min-height: 100vh;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 /* Container Spacing */
@@ -292,4 +382,102 @@ input, select, textarea {
   opacity: 0.5;
   z-index: 100;
   transition: opacity 0.3s ease;
+}
+
+/* App Content */
+.app-content {
+  min-height: calc(100vh - 70px);
+  padding-top: 20px;
+}
+
+/* Button updates for AgroIntel look */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--text-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Card styles update */
+.card {
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.card-title {
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+/* Form controls update */
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-light);
+  border-radius: 8px;
+  padding: 12px 15px;
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--secondary-color);
+  color: var(--text-light);
+  box-shadow: 0 0 0 0.25rem rgba(204, 255, 0, 0.25);
+}
+
+/* Alert styles */
+.alert {
+  border-radius: 12px;
+  border: none;
+}
+
+/* Input with highlight */
+.input-highlight::placeholder {
+  color: var(--secondary-color);
+}
+
+/* Border color */
+.form-control:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 0.25rem rgba(204, 255, 0, 0.25);
+}
+
+/* Feature link styles */
+.feature-link {
+  color: var(--text-color) !important;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.feature-link:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: var(--primary-color);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease;
+}
+
+.feature-link:hover {
+  color: var(--primary-color) !important;
 }

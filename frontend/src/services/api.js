@@ -19,6 +19,23 @@ export const analyzeImage = async (imageFile) => {
   }
 };
 
+export const analyzeSoil = async (imageFile) => {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+  
+  try {
+    const response = await axios.post(`${API_URL}/analyze-soil`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error analyzing soil image:', error);
+    throw error;
+  }
+};
+
 export const getWeatherData = async (lat, lon) => {
   try {
     const response = await axios.get(`${API_URL}/weather`, {
@@ -37,6 +54,16 @@ export const getModelInfo = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching model info:', error);
+    throw error;
+  }
+};
+
+export const sendChatMessage = async (message) => {
+  try {
+    const response = await axios.post(`${API_URL}/chat`, { message });
+    return response.data;
+  } catch (error) {
+    console.error('Error sending chat message:', error);
     throw error;
   }
 };

@@ -1,0 +1,124 @@
+.agrointel-dashboard {
+  padding: 60px 0;
+  min-height: calc(100vh - 70px);
+  background-color: var(--background-color);
+}
+
+.dashboard-header {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.dashboard-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.dashboard-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.upload-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.results-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100%;
+}
+
+/* Style overrides for upload component */
+.upload-container .card {
+  background-color: transparent;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.upload-container .btn-primary {
+  background-color: var(--secondary-color);
+  color: #333;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.upload-container .btn-primary:hover {
+  background-color: #d9ff00;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Results styling */
+.results-container h3 {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.results-container .list-group-item {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.results-container .badge {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.results-container img {
+  border-radius: 12px;
+  max-height: 300px;
+  object-fit: contain;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 5px;
+}
+
+.cta-analyze {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.analysis-result h3 {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.result-class {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  display: inline-block;
+} 

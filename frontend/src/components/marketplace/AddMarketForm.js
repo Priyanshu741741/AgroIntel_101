@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, Typography } from '@mui/material';
-import { addProduct } from '../../services/marketplaceService';
+import { Modal, Box, Typography, TextField, Button, MenuItem, Select, InputLabel, FormControl, Alert } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 const AddMarketForm = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -8,128 +8,177 @@ const AddMarketForm = ({ open, onClose, onSubmit }) => {
     description: '',
     location: '',
     products: '',
-    priceRange: ''
+    price_range: '',
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
+    setFormData(prevData => ({
+      ...prevData,
       [name]: value
     }));
-    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-
+    setIsSubmitting(true);
+    setError(null);
+    
     try {
-      const productData = {
+      // Prepare the data
+      const marketData = {
         ...formData,
+        id: Date.now(), // Generate a temporary ID
         rating: 0,
-        products: formData.products.split(',').map(p => p.trim())
+        products: formData.products.split(',').map(product => product.trim())
       };
-
-      const productId = await addProduct(productData);
-      if (onSubmit) {
-        onSubmit({ ...productData, id: productId });
-      }
       
-      setFormData({
-        name: '',
-        description: '',
-        location: '',
-        products: '',
-        priceRange: ''
-      });
-      onClose();
-    } catch (error) {
-      console.error('Error adding market listing:', error);
-      setError('Failed to add market listing. Please try again.');
+      // Here you would typically send the data to your backend API
+      // For example: await fetch('/api/market', {method: 'POST', body: JSON.stringify(marketData)});
+      
+      // For now, we'll just simulate a successful submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Call the onSubmit prop with the new market data
+      onSubmit(marketData);
+      
+      // Show success message
+      setSuccess(true);
+      
+      // Reset form after 2 seconds
+      setTimeout(() => {
+        setFormData({
+          name: '',
+          description: '',
+          location: '',
+          products: '',
+          price_range: ''
+        });
+        setSuccess(false);
+        onClose();
+      }, 2000);
+    } catch (err) {
+      setError('Failed to add market. Please try again.');
+      console.error('Error adding market:', err);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Add New Market Listing</DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          {error && (
-            <Typography color="error" sx={{ mb: 2 }}>
-              {error}
-            </Typography>
-          )}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              required
-              label="Business Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              fullWidth
-              disabled={loading}
-            />
-            <TextField
-              required
-              label="Description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              multiline
-              rows={3}
-              fullWidth
-              disabled={loading}
-            />
-            <TextField
-              required
-              label="Location"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              fullWidth
-              disabled={loading}
-            />
-            <TextField
-              required
-              label="Products (comma-separated)"
-              name="products"
-              value={formData.products}
-              onChange={handleChange}
-              helperText="Enter products separated by commas"
-              fullWidth
-              disabled={loading}
-            />
-            <TextField
-              required
-              label="Price Range"
-              name="priceRange"
-              value={formData.priceRange}
-              onChange={handleChange}
-              placeholder="e.g. ₹500 - ₹2000"
-              fullWidth
-              disabled={loading}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} disabled={loading}>Cancel</Button>
-          <Button 
-            type="submit" 
-            variant="contained" 
-            color="primary"
-            disabled={loading}
-          >
-            {loading ? 'Adding...' : 'Add Listing'}
+    <Modal open={open} onClose={onClose}>
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: { xs: '90%', sm: 500 },
+        bgcolor: 'background.paper',
+        borderRadius: 2,
+        boxShadow: 24,
+        p: 4
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h5" component="h2">
+            Add New Market
+          </Typography>
+          <Button onClick={onClose} sx={{ minWidth: 'auto', p: 0.5 }}>
+            <CloseIcon />
           </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+        </Box>
+        
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            Market added successfully!
+          </Alert>
+        )}
+        
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Market Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            margin="normal"
+          />
+          
+          <TextField
+            fullWidth
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            multiline
+            rows={3}
+            required
+            margin="normal"
+          />
+          
+          <TextField
+            fullWidth
+            label="Location"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            required
+            margin="normal"
+          />
+          
+          <TextField
+            fullWidth
+            label="Products (comma separated)"
+            name="products"
+            value={formData.products}
+            onChange={handleChange}
+            helperText="e.g., Organic Compost, Bio-Fertilizer"
+            required
+            margin="normal"
+          />
+          
+          <TextField
+            fullWidth
+            label="Price Range"
+            name="price_range"
+            value={formData.price_range}
+            onChange={handleChange}
+            helperText="e.g., ₹500 - ₹2000"
+            required
+            margin="normal"
+          />
+          
+          <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+            <Button 
+              variant="outlined" 
+              onClick={onClose} 
+              sx={{ mr: 2 }}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Adding...' : 'Add Market'}
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Modal>
   );
 };
 

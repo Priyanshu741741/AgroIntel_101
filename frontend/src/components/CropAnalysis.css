@@ -1,0 +1,128 @@
+.crop-analysis-component {
+  background-color: transparent;
+}
+
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.image-upload-area {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.upload-placeholder {
+  border: 2px dashed var(--primary-color);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.upload-placeholder i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background-color: rgba(0, 0, 0, 0.02);
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.file-input {
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  border-radius: 8px;
+}
+
+.analysis-button {
+  min-width: 200px;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.analysis-button:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.analysis-results {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.analysis-results h3 {
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.analysis-results h4 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.crop-info {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.crop-type, .health-status, .confidence {
+  background-color: rgba(0, 0, 0, 0.02);
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.crop-type span, .health-status span, .confidence span {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.recommendation-item {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .crop-info {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .crop-type, .health-status, .confidence {
+    width: 100%;
+    text-align: center;
+  }
+} 
