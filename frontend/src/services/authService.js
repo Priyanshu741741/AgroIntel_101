@@ -1,64 +1,76 @@
-import { auth } from '../firebase/config';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendPasswordResetEmail
-} from 'firebase/auth';
+// This is a mock implementation replacing Firebase auth
+// Store user in localStorage for persistence
+const MOCK_AUTH_USER = 'mockAuthUser';
 
-// Create a new user with email and password
+// Mock authentication functions
 export const registerUser = async (email, password) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    const user = { uid: 'mock-uid-' + Date.now(), email, displayName: email.split('@')[0] };
+    localStorage.setItem(MOCK_AUTH_USER, JSON.stringify(user));
+    return user;
   } catch (error) {
-    throw error;
+    throw new Error('Registration failed');
   }
 };
 
-// Sign in existing user with email and password
 export const loginUser = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    // For simplicity, we'll just create a user if they don't exist
+    const user = { uid: 'mock-uid-' + Date.now(), email, displayName: email.split('@')[0] };
+    localStorage.setItem(MOCK_AUTH_USER, JSON.stringify(user));
+    return user;
   } catch (error) {
-    throw error;
+    throw new Error('Login failed');
   }
 };
 
-// Sign in with Google
 export const signInWithGoogle = async () => {
   try {
-    const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    return result.user;
+    const user = { 
+      uid: 'google-mock-uid-' + Date.now(), 
+      email: 'google-user@example.com', 
+      displayName: 'Google User' 
+    };
+    localStorage.setItem(MOCK_AUTH_USER, JSON.stringify(user));
+    return user;
   } catch (error) {
-    throw error;
+    throw new Error('Google sign-in failed');
   }
 };
 
-// Sign out user
 export const logoutUser = async () => {
   try {
-    await signOut(auth);
+    localStorage.removeItem(MOCK_AUTH_USER);
   } catch (error) {
-    throw error;
+    throw new Error('Logout failed');
   }
 };
 
-// Reset password
 export const resetPassword = async (email) => {
   try {
-    await sendPasswordResetEmail(auth, email);
+    console.log(`Password reset email sent to ${email}`);
+    // In a real implementation, this would send an email
+    return true;
   } catch (error) {
-    throw error;
+    throw new Error('Password reset failed');
   }
 };
 
-// Subscribe to auth state changes
 export const onAuthStateChange = (callback) => {
-  return onAuthStateChanged(auth, callback);
+  // Initial call with current state
+  const currentUser = getCurrentUser();
+  setTimeout(() => callback(currentUser), 0);
+  
+  // This would normally add a listener, but for our mock we'll just return a no-op function
+  return () => {};
+};
+
+// Helper function to get current user
+export const getCurrentUser = () => {
+  try {
+    const user = localStorage.getItem(MOCK_AUTH_USER);
+    return user ? JSON.parse(user) : null;
+  } catch (error) {
+    return null;
+  }
 };

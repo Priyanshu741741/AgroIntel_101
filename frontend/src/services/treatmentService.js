@@ -1,57 +1,83 @@
-import { db } from '../firebase/config';
-import { collection, addDoc, updateDoc, doc, getDocs, query, where } from 'firebase/firestore';
+// This is a local storage implementation replacing Firebase
+const TREATMENTS_STORAGE_KEY = 'treatments';
 
-const TREATMENTS_COLLECTION = 'treatments';
+// Helper functions for local storage
+const getTreatmentsFromStorage = () => {
+  try {
+    const treatments = localStorage.getItem(TREATMENTS_STORAGE_KEY);
+    return treatments ? JSON.parse(treatments) : [];
+  } catch (error) {
+    console.error('Error reading treatments from localStorage', error);
+    return [];
+  }
+};
+
+const saveTreatmentsToStorage = (treatments) => {
+  try {
+    localStorage.setItem(TREATMENTS_STORAGE_KEY, JSON.stringify(treatments));
+  } catch (error) {
+    console.error('Error saving treatments to localStorage', error);
+  }
+};
 
 export const saveTreatmentPlan = async (diseaseData, treatments) => {
   try {
+    const allTreatments = getTreatmentsFromStorage();
+    
     const treatmentPlan = {
+      id: 'treatment-' + Date.now(),
       diseaseType: diseaseData.type,
       createdAt: new Date().toISOString(),
-      treatments: treatments.map(treatment => ({
+      treatments: treatments.map((treatment, index) => ({
         ...treatment,
+        id: `treatment-item-${Date.now()}-${index}`,
         status: 'pending',
         completedAt: null
       }))
     };
 
-    const docRef = await addDoc(collection(db, TREATMENTS_COLLECTION), treatmentPlan);
-    return docRef.id;
+    allTreatments.push(treatmentPlan);
+    saveTreatmentsToStorage(allTreatments);
+    return treatmentPlan.id;
   } catch (error) {
     console.error('Error saving treatment plan:', error);
-    throw error;
+    throw new Error('Failed to save treatment plan');
   }
 };
 
 export const updateTreatmentStatus = async (planId, treatmentId, status) => {
   try {
-    const planRef = doc(db, TREATMENTS_COLLECTION, planId);
-    const completedAt = status === 'completed' ? new Date().toISOString() : null;
-
-    await updateDoc(planRef, {
-      treatments: treatments.map(t => 
+    const plans = getTreatmentsFromStorage();
+    const planIndex = plans.findIndex(plan => plan.id === planId);
+    
+    if (planIndex !== -1) {
+      const plan = plans[planIndex];
+      const completedAt = status === 'completed' ? new Date().toISOString() : null;
+      
+      const updatedTreatments = plan.treatments.map(t => 
         t.id === treatmentId 
           ? { ...t, status, completedAt }
           : t
-      )
-    });
+      );
+      
+      plans[planIndex] = {
+        ...plan,
+        treatments: updatedTreatments
+      };
+      
+      saveTreatmentsToStorage(plans);
+    }
   } catch (error) {
     console.error('Error updating treatment status:', error);
-    throw error;
+    throw new Error('Failed to update treatment status');
   }
 };
 
 export const getTreatmentPlans = async () => {
   try {
-    const q = query(collection(db, TREATMENTS_COLLECTION));
-    const querySnapshot = await getDocs(q);
-    
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    return getTreatmentsFromStorage();
   } catch (error) {
     console.error('Error fetching treatment plans:', error);
-    throw error;
+    throw new Error('Failed to fetch treatment plans');
   }
 };

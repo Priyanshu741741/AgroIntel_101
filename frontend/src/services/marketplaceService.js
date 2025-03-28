@@ -1,82 +1,98 @@
-import { db } from '../firebase/config';
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+// This is a local storage implementation replacing Firebase
+const PRODUCTS_STORAGE_KEY = 'products';
 
-const PRODUCTS_COLLECTION = 'products';
+// Helper functions for local storage
+const getProductsFromStorage = () => {
+  try {
+    const products = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+    return products ? JSON.parse(products) : [];
+  } catch (error) {
+    console.error('Error reading products from localStorage', error);
+    return [];
+  }
+};
+
+const saveProductsToStorage = (products) => {
+  try {
+    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+  } catch (error) {
+    console.error('Error saving products to localStorage', error);
+  }
+};
 
 // Add a new product listing
 export const addProduct = async (productData) => {
   try {
-    const docRef = await addDoc(collection(db, PRODUCTS_COLLECTION), {
+    const products = getProductsFromStorage();
+    const newProduct = {
+      id: 'product-' + Date.now(),
       ...productData,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-    return docRef.id;
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    products.push(newProduct);
+    saveProductsToStorage(products);
+    return newProduct.id;
   } catch (error) {
-    throw error;
+    throw new Error('Failed to add product');
   }
 };
 
 // Get a specific product by ID
 export const getProduct = async (productId) => {
   try {
-    const docRef = doc(db, PRODUCTS_COLLECTION, productId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() };
-    }
-    return null;
+    const products = getProductsFromStorage();
+    return products.find(product => product.id === productId) || null;
   } catch (error) {
-    throw error;
+    throw new Error('Failed to get product');
   }
 };
 
 // Get all products for a specific seller
 export const getSellerProducts = async (sellerId) => {
   try {
-    const q = query(collection(db, PRODUCTS_COLLECTION), where("sellerId", "==", sellerId));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const products = getProductsFromStorage();
+    return products.filter(product => product.sellerId === sellerId);
   } catch (error) {
-    throw error;
+    throw new Error('Failed to get seller products');
   }
 };
 
 // Update a product listing
 export const updateProduct = async (productId, updateData) => {
   try {
-    const docRef = doc(db, PRODUCTS_COLLECTION, productId);
-    await updateDoc(docRef, {
-      ...updateData,
-      updatedAt: new Date()
-    });
+    const products = getProductsFromStorage();
+    const index = products.findIndex(product => product.id === productId);
+    
+    if (index !== -1) {
+      products[index] = {
+        ...products[index],
+        ...updateData,
+        updatedAt: new Date().toISOString()
+      };
+      saveProductsToStorage(products);
+    }
   } catch (error) {
-    throw error;
+    throw new Error('Failed to update product');
   }
 };
 
 // Delete a product listing
 export const deleteProduct = async (productId) => {
   try {
-    const docRef = doc(db, PRODUCTS_COLLECTION, productId);
-    await deleteDoc(docRef);
+    const products = getProductsFromStorage();
+    const updatedProducts = products.filter(product => product.id !== productId);
+    saveProductsToStorage(updatedProducts);
   } catch (error) {
-    throw error;
+    throw new Error('Failed to delete product');
   }
 };
 
 // Get all available products
 export const getAllProducts = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, PRODUCTS_COLLECTION));
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    return getProductsFromStorage();
   } catch (error) {
-    throw error;
+    throw new Error('Failed to get all products');
   }
 };
