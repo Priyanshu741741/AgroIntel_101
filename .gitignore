@@ -46,14 +46,19 @@ build/Release
 
 # Dependency directories
 node_modules/
+**/node_modules/
+frontend/node_modules/
 
 # Optional npm cache directory
 .npm
 
 # Development cache files
 .cache/
+**/.cache/
 *.pack
+**/*.pack
 frontend/node_modules/.cache/
+frontend/node_modules/.cache/**/*
 
 # Build files
 build/
