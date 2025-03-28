@@ -31,7 +31,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Model paths
-MODEL_PATH = "C:/Users/Priyanshu/Desktop/crop-monitoring-app/backend/models/crop_health_model"
+CROP_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "crop_health_model")
+SOIL_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "soil_classification_model")
 
 # Check if model exists, if not, we'll load it on demand
 model = None
@@ -66,15 +67,15 @@ def load_model_if_needed():
     global model, class_indices, health_categories
     
     if model is None:
-        if not os.path.exists(MODEL_PATH):
+        if not os.path.exists(CROP_MODEL_PATH):
             return False, "Model not found. Please train the model first."
         
         try:
-            print(f"Loading model from {MODEL_PATH}")
-            model = tf.keras.models.load_model(MODEL_PATH)
+            print(f"Loading model from {CROP_MODEL_PATH}")
+            model = tf.keras.models.load_model(CROP_MODEL_PATH)
             
             # Load class indices
-            class_indices_path = os.path.join(MODEL_PATH, "class_indices.json")
+            class_indices_path = os.path.join(CROP_MODEL_PATH, "class_indices.json")
             if os.path.exists(class_indices_path):
                 with open(class_indices_path, "r") as f:
                     class_indices = json.load(f)
@@ -82,7 +83,7 @@ def load_model_if_needed():
                 return False, "Class indices file not found."
             
             # Load health categories if available
-            health_categories_path = os.path.join(MODEL_PATH, "health_categories.json")
+            health_categories_path = os.path.join(CROP_MODEL_PATH, "health_categories.json")
             if os.path.exists(health_categories_path):
                 with open(health_categories_path, "r") as f:
                     health_categories = json.load(f)
@@ -93,53 +94,173 @@ def load_model_if_needed():
     
     return True, "Model already loaded"
 
-@app.route('/api/analyze', methods=['POST'])
-def analyze_image():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image provided'}), 400
+# Global variables for soil model caching
+soil_model = None
+soil_classes = None
+soil_characteristics = None
+
+def load_soil_model_if_needed():
+    """Load the soil classification model and related data if not already loaded"""
+    global soil_model, soil_classes, soil_characteristics
     
-    # Load model if not already loaded
-    success, message = load_model_if_needed()
+    if soil_model is None:
+        if not os.path.exists(SOIL_MODEL_PATH):
+            return False, "Soil classification model not found. Please train the model first."
+        
+        try:
+            print(f"Loading soil model from {SOIL_MODEL_PATH}")
+            soil_model = tf.keras.models.load_model(SOIL_MODEL_PATH)
+            
+            # Load class indices and characteristics
+            soil_classes_path = os.path.join(SOIL_MODEL_PATH, "soil_class_indices.json")
+            soil_characteristics_path = os.path.join(SOIL_MODEL_PATH, "soil_characteristics.json")
+            
+            if not os.path.exists(soil_classes_path):
+                return False, "Soil class indices file not found."
+                
+            if not os.path.exists(soil_characteristics_path):
+                return False, "Soil characteristics file not found."
+            
+            with open(soil_classes_path) as f:
+                soil_classes = json.load(f)
+            
+            with open(soil_characteristics_path) as f:
+                soil_characteristics = json.load(f)
+            
+            return True, "Soil model and data loaded successfully"
+        except Exception as e:
+            return False, f"Error loading soil model: {str(e)}"
+    
+    return True, "Soil model already loaded"
+
+@app.route('/api/analyze-soil', methods=['POST'])
+def analyze_soil():
+    # Load model if needed
+    success, message = load_soil_model_if_needed()
     if not success:
         return jsonify({'error': message}), 500
     
     try:
+        
+        # Since we've already loaded the model and data, we can proceed directly
+        if soil_classes is None or soil_characteristics is None:
+            return jsonify({'error': 'Model data not properly initialized'}), 500
+
+        if 'image' not in request.files:
+            return jsonify({'error': 'No image provided'}), 400
+
         # Load and preprocess image
         image_file = request.files['image']
-        img = Image.open(image_file).convert('RGB')
+        
+        # Validate file format
+        allowed_extensions = {'png', 'jpg', 'jpeg'}
+        if not image_file.filename or '.' not in image_file.filename or \
+           image_file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
+            return jsonify({'error': 'Invalid image format. Allowed formats: PNG, JPG, JPEG'}), 400
+        
+        img = Image.open(image_file.stream).convert('RGB')
+        
+        # Validate image dimensions
+        if img.size[0] < 50 or img.size[1] < 50:
+            return jsonify({'error': 'Image dimensions too small. Minimum size: 50x50 pixels'}), 400
+        
+        # Preprocess image
         img = img.resize((224, 224))
         img_array = np.array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
+
+        # Make prediction
+        print("Making soil prediction...")
+        predictions = soil_model.predict(img_array)
+        predicted_class_idx = np.argmax(predictions[0])
+        confidence = float(np.max(predictions[0]))
         
+        # Get class name and characteristics
+        class_name = next((k for k, v in soil_classes.items() if v == predicted_class_idx), None)
+        if not class_name:
+            return jsonify({'error': f'Could not find class name for index {predicted_class_idx}'}), 500
+            
+        # Get characteristics and recommendations from the soil_characteristics.json file
+        soil_info = soil_characteristics.get(class_name, {})
+        characteristics = soil_info.get('characteristics', [])
+        recommendations = soil_info.get('recommendations', [
+            f"Apply {class_name}-specific fertilizer",
+            "Maintain proper irrigation schedule",
+            "Monitor soil pH levels regularly"
+        ])
+
+        print(f"Soil analysis complete. Identified as {class_name} with {confidence:.2f} confidence")
+        return jsonify({
+            'class': class_name,
+            'confidence': confidence,
+            'characteristics': characteristics,
+            'recommendations': recommendations
+        })
+
+    except Exception as e:
+        print(f"Error in soil analysis: {str(e)}")
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/analyze', methods=['POST'])
+def analyze_crop():
+    success, message = load_model_if_needed()
+    if not success:
+        return jsonify({'error': message}), 500
+    
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+
+    try:
+        # Load and preprocess image
+        image_file = request.files['image']
+        
+        # Validate file format
+        allowed_extensions = {'png', 'jpg', 'jpeg'}
+        if not image_file.filename or '.' not in image_file.filename or \
+           image_file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
+            return jsonify({'error': 'Invalid image format. Allowed formats: PNG, JPG, JPEG'}), 400
+        
+        img = Image.open(image_file.stream).convert('RGB')
+        
+        # Validate image dimensions
+        if img.size[0] < 50 or img.size[1] < 50:
+            return jsonify({'error': 'Image dimensions too small. Minimum size: 50x50 pixels'}), 400
+        
+        # Preprocess image
+        img = img.resize((224, 224))
+        img_array = np.array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)
+
         # Make prediction
         predictions = model.predict(img_array)
         predicted_class_idx = np.argmax(predictions[0])
+        confidence = float(np.max(predictions[0]))
         
-        # Map index to class name
-        idx_to_class = {v: k for k, v in class_indices.items()}
-        predicted_class = idx_to_class[predicted_class_idx]
-        confidence = float(predictions[0][predicted_class_idx])
+        # Get class name
+        predicted_class = next(k for k, v in class_indices.items() if v == predicted_class_idx)
         
         # Determine health category
-        health_category = "unknown"
+        health_category = None
         for category, classes in health_categories.items():
-            if predicted_class in classes:
+            if any(cls in predicted_class.lower() for cls in classes):
                 health_category = category
                 break
         
+        if not health_category:
+            health_category = 'unknown'
+        
         # Get recommendations
-        recommendation = recommendations.get(health_category, recommendations["healthy"])
+        category_recommendations = recommendations.get(health_category, recommendations['healthy'])
         
         return jsonify({
-            'status': 'success',
             'class': predicted_class,
             'confidence': confidence,
             'health_category': health_category,
-            'recommendations': recommendation
+            'recommendations': category_recommendations
         })
-    
+
     except Exception as e:
-        print(f"Error analyzing image: {e}")
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
@@ -174,14 +295,35 @@ def get_weather():
         
         # Process and simplify the forecast data
         simplified_forecast = []
-        for item in forecast['list'][:5]:  # Get first 5 entries (roughly daily)
+        processed_dates = set()
+        
+        for item in forecast['list']:
+            # Extract date without time
+            date_only = item['dt_txt'].split(' ')[0]
+            
+            # Skip if we already have this date
+            if date_only in processed_dates:
+                continue
+            
+            # Add to processed dates
+            processed_dates.add(date_only)
+            
+            # Format date to day name (e.g., "Monday")
+            from datetime import datetime
+            date_obj = datetime.strptime(item['dt_txt'], '%Y-%m-%d %H:%M:%S')
+            day_name = date_obj.strftime('%A')
+            
             simplified_forecast.append({
-                'date': item['dt_txt'],
+                'date': day_name,
                 'temp': item['main']['temp'],
                 'description': item['weather'][0]['description'],
                 'humidity': item['main']['humidity'],
                 'wind_speed': item['wind']['speed']
             })
+            
+            # Limit to 5 days
+            if len(simplified_forecast) >= 5:
+                break
         
         return jsonify({
             'current': {
@@ -269,10 +411,10 @@ def chat():
 
 if __name__ == '__main__':
     # Create model directory if it doesn't exist
-    Path(MODEL_PATH).mkdir(parents=True, exist_ok=True)
+    Path(CROP_MODEL_PATH).mkdir(parents=True, exist_ok=True)
     
     # Check if model is available
-    model_available = os.path.exists(MODEL_PATH) and any(os.listdir(MODEL_PATH))
+    model_available = os.path.exists(CROP_MODEL_PATH) and any(os.listdir(CROP_MODEL_PATH))
     if not model_available:
         print("Warning: Model not found. Please train the model before using the analyze endpoint.")
     

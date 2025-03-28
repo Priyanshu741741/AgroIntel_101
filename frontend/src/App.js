@@ -9,6 +9,9 @@ import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import WeatherPage from './pages/WeatherPage';
 import ChatbotPage from './pages/ChatbotPage';
+import MarketplacePage from './pages/MarketplacePage';
+import TreatmentTimeline from './components/TreatmentTimeline';
+import SoilAnalysis from './components/SoilAnalysis';
 import SplashScreen from './components/SplashScreen';
 
 function App() {
@@ -34,7 +37,10 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/weather" element={<WeatherPage />} />
+              <Route path="/treatment-timeline" element={<TreatmentTimeline />} />
+              <Route path="/soil-analysis" element={<SoilAnalysis />} />
               <Route path="/chatbot" element={<ChatbotPage />} />
+              <Route path="/marketplace" element={<MarketplacePage />} />
             </Routes>
           </main>
           <footer className="bg-dark text-white text-center py-3 mt-5">

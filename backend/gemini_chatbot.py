@@ -12,6 +12,7 @@ load_dotenv()
 
 class GeminiCropChatbot:
     def __init__(self):
+        self._cleanup_handler = lambda signum, frame: self.cleanup()
         # Get API key from environment variable or use the provided one
         self.api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyDJMxmHvenLjjR0YASY15sCHYL4Zvt87Bk")
         
@@ -72,6 +73,11 @@ class GeminiCropChatbot:
             
             self.api_key_error = False
             print("Gemini API initialized successfully!")
+
+            # Register cleanup handlers
+            signal.signal(signal.SIGINT, self._cleanup_handler)
+            signal.signal(signal.SIGTERM, self._cleanup_handler)
+            atexit.register(self.cleanup)
             
         except Exception as e:
             print(f"Error initializing Gemini API: {e}")

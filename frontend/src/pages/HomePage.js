@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import SoilAnalysis from '../components/SoilAnalysis';
 
 const HomePage = () => {
   return (
@@ -10,7 +11,7 @@ const HomePage = () => {
           <div className="text-center">
             <h1>AI-Powered Crop Monitoring</h1>
             <p className="lead">
-              Monitor your crops' health using AI and get personalized recommendations
+              Monitor your crops' health and soil conditions using AI and get personalized recommendations
             </p>
           </div>
         </Col>
@@ -78,13 +79,20 @@ const HomePage = () => {
         </Col>
       </Row>
       
+      <Row className="mb-5">
+        <Col>
+          <h2 className="text-center mb-4">Soil Analysis</h2>
+          <SoilAnalysis />
+        </Col>
+      </Row>
+      
       <Row>
         <Col>
           <div className="text-center">
             <h3>How It Works</h3>
             <p>
-              Our app uses advanced AI models to identify crop health issues and provide personalized recommendations.
-              Simply take a photo of your crops, upload it, and get instant analysis. Need more help? Chat with our
+              Our app uses advanced AI models to identify crop health issues, analyze soil conditions, and provide personalized recommendations.
+              Simply take a photo of your crops or soil, upload it, and get instant analysis. Need more help? Chat with our
               AI-powered assistant for expert advice on crop care.
             </p>
           </div>

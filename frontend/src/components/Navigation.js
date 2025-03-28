@@ -13,6 +13,9 @@ const Navigation = () => {
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
             <Nav.Link as={Link} to="/weather">Weather</Nav.Link>
+            <Nav.Link as={Link} to="/treatment-timeline">Treatment Timeline</Nav.Link>
+            <Nav.Link as={Link} to="/soil-analysis">Soil Analysis</Nav.Link>
+            <Nav.Link as={Link} to="/marketplace">Marketplace</Nav.Link>
             <Nav.Link as={Link} to="/chatbot">AI Assistant</Nav.Link>
           </Nav>
         </Navbar.Collapse>

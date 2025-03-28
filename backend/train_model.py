@@ -7,7 +7,7 @@ from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.models import Model
 
-def train_model(data_path, model_save_path, epochs=3, batch_size=8):
+def train_model(data_path, model_save_path, epochs=3, batch_size=4):
     """
     Train a crop health classification model using transfer learning with MobileNetV2.
     

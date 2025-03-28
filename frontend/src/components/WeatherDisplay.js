@@ -108,7 +108,10 @@ const WeatherDisplay = () => {
           <Col key={index} md={6} lg={4} className="mb-3">
             <Card>
             <Card.Header>
-                {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                {/* Use the date property directly if it's already a day name, otherwise format it */}
+                {typeof day.date === 'string' && day.date.length <= 10 
+                  ? day.date 
+                  : new Date(day.date).toLocaleDateString('en-US', { weekday: 'long' })}
                 {' '}{getWeatherIcon(day.description)}
               </Card.Header>
               <Card.Body>
