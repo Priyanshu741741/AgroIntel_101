@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Table, Form, Modal } from 'react-bootstrap';
 import { getSellerProducts, addProduct, updateProduct, deleteProduct } from '../services/marketplaceService';
-import { getCurrentUser } from '../services/authService';
+import { auth } from '../firebase/config';
 
 const SellerDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -22,8 +22,7 @@ const SellerDashboard = () => {
 
   const loadProducts = async () => {
     try {
-      const currentUser = getCurrentUser();
-      const sellerId = currentUser?.uid;
+      const sellerId = auth.currentUser?.uid;
       if (!sellerId) {
         setError('User not authenticated');
         return;
@@ -39,8 +38,7 @@ const SellerDashboard = () => {
 
   const handleAddProduct = async () => {
     try {
-      const currentUser = getCurrentUser();
-      const sellerId = currentUser?.uid;
+      const sellerId = auth.currentUser?.uid;
       if (!sellerId) {
         setError('User not authenticated');
         return;

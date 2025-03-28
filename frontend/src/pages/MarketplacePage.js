@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Grid, Card, CardContent, Typography, TextField, Button, Rating, Box, AppBar, Tabs, Tab } from '@mui/material';
 import { Search as SearchIcon, LocationOn as LocationIcon, Add as AddIcon } from '@mui/icons-material';
 import AddMarketForm from '../components/marketplace/AddMarketForm';
-import { getCurrentUser, onAuthStateChange } from '../services/authService';
+import { auth } from '../firebase/config';
 import { useNavigate } from 'react-router-dom';
 import './MarketplacePage.css';
 
@@ -38,7 +38,7 @@ const MarketplacePage = () => {
 
   useEffect(() => {
     // Listen for auth state changes
-    const unsubscribe = onAuthStateChange(user => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user);
     });
 
