@@ -1,0 +1,13 @@
+{
+  "framework": "create-react-app",
+  "buildCommand": "npm run build",
+  "devCommand": "npm start",
+  "installCommand": "npm install",
+  "outputDirectory": "build",
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
+  "env": {
+    "REACT_APP_FIREBASE_API_KEY": "AIzaSyDummy-apikey-for-development"
+  }
+} 

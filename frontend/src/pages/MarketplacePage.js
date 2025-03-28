@@ -34,30 +34,42 @@ const MarketplacePage = () => {
   const [location, setLocation] = useState(null);
   const [isAddMarketOpen, setIsAddMarketOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [authError, setAuthError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for auth state changes
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
-    });
+    try {
+      // Listen for auth state changes
+      const unsubscribe = auth?.onAuthStateChanged?.(user => {
+        setCurrentUser(user);
+      }) || (() => {});
 
-    // Get user's location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-        },
-        (error) => {
-          console.error('Error getting location:', error);
+      // Get user's location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            });
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+          }
+        );
+      }
+
+      return () => {
+        try {
+          unsubscribe();
+        } catch (e) {
+          console.error("Error unsubscribing from auth:", e);
         }
-      );
+      };
+    } catch (error) {
+      console.error("Error setting up auth listener:", error);
+      setAuthError("Failed to initialize authentication");
     }
-
-    return () => unsubscribe();
   }, []);
 
   const handleSearch = (event) => {
@@ -77,7 +89,7 @@ const MarketplacePage = () => {
   };
 
   const handleAddMarket = () => {
-    if (!currentUser) {
+    if (!currentUser && auth) {
       navigate('/login');
       return;
     }
@@ -109,6 +121,15 @@ const MarketplacePage = () => {
             </Button>
           </Box>
         </Box>
+
+        {authError && (
+          <Box sx={{ mb: 2, p: 2, bgcolor: '#ffebee', borderRadius: 1 }}>
+            <Typography color="error">{authError}</Typography>
+            <Typography variant="body2">
+              Firebase authentication is currently unavailable. Some features may be limited.
+            </Typography>
+          </Box>
+        )}
 
         {/* Search and Filter Section */}
         <Box sx={{ mb: 4 }} className="search-container animate-in" style={{ animationDelay: '0.2s' }}>
