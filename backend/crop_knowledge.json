@@ -1,0 +1,44 @@
+{
+  "crops": {
+    "tomato": {
+      "diseases": ["early blight", "late blight", "leaf mold", "septoria leaf spot"],
+      "care": "Water regularly, provide full sun, and support with stakes or cages."
+    },
+    "potato": {
+      "diseases": ["early blight", "late blight", "blackleg", "common scab"],
+      "care": "Plant in well-drained soil, hill up soil around stems as they grow."
+    },
+    "corn": {
+      "diseases": ["gray leaf spot", "northern corn leaf blight", "common rust"],
+      "care": "Requires consistent moisture and nitrogen-rich soil."
+    },
+    "apple": {
+      "diseases": ["apple scab", "fire blight", "cedar apple rust"],
+      "care": "Prune annually, thin fruit for better size, protect from pests."
+    },
+    "rice": {
+      "diseases": ["rice blast", "bacterial leaf blight", "sheath blight"],
+      "care": "Maintain consistent water levels, ensure proper drainage during certain growth stages."
+    },
+    "wheat": {
+      "diseases": ["rust", "powdery mildew", "fusarium head blight"],
+      "care": "Plant in well-drained soil, provide adequate nitrogen fertilization."
+    },
+    "cucumber": {
+      "diseases": ["powdery mildew", "downy mildew", "angular leaf spot"],
+      "care": "Provide trellising, consistent moisture, and good air circulation."
+    },
+    "pepper": {
+      "diseases": ["bacterial spot", "phytophthora blight", "anthracnose"],
+      "care": "Requires warm soil, consistent moisture, and calcium-rich soil."
+    }
+  },
+  "general_care": {
+    "watering": "Most crops need 1-2 inches of water per week. Water deeply and less frequently.",
+    "fertilizing": "Use balanced fertilizer for most crops. Nitrogen promotes leaf growth, phosphorus for roots and fruits.",
+    "pest_control": "Regularly inspect plants, use organic methods first, chemical pesticides as last resort.",
+    "soil_health": "Maintain organic matter in soil, rotate crops, and test soil pH regularly.",
+    "pruning": "Remove dead or diseased branches, improve air circulation, and control plant size and shape.",
+    "mulching": "Apply 2-3 inches of mulch to conserve moisture, suppress weeds, and regulate soil temperature."
+  }
+}
