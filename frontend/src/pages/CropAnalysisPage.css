@@ -1,5 +1,5 @@
 .agrointel-crop {
-  padding: 60px 0;
+  padding: 0 0 60px 0;
   min-height: calc(100vh - 70px);
   background-color: var(--background-color);
   position: relative;

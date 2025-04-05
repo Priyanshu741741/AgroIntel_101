@@ -1,0 +1,156 @@
+.agrointel-yield-prediction {
+  padding-top: 0; /* Remove default padding from App.css */
+  margin-top: 0; /* Remove default margin from App.css */
+  min-height: calc(100vh - 70px); /* Adjust based on header height */
+  background-color: var(--background-color);
+  padding-bottom: 2rem; 
+}
+
+.yield-header {
+  padding-top: 30px; /* Add space below sticky header */
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.yield-title {
+  font-size: 2.8rem !important;
+  font-weight: 700 !important;
+  color: var(--text-color) !important;
+}
+
+.yield-subtitle {
+  color: var(--text-dim) !important;
+}
+
+.input-card, .result-card, .calendar-card {
+  background-color: var(--bg-card);
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-soft) !important;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.input-card:hover, .result-card:hover, .calendar-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-strong) !important;
+}
+
+/* Style the calendar */
+.rbc-calendar {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  background-color: var(--bg-darker);
+  color: var(--text-color);
+}
+
+.rbc-toolbar {
+  background-color: var(--bg-card);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.rbc-toolbar button {
+  background: none !important;
+  color: var(--text-color) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 4px !important;
+  padding: 6px 12px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease;
+}
+
+.rbc-toolbar button:hover, .rbc-toolbar button:active {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 1.2em;
+}
+
+.rbc-header {
+  background-color: var(--bg-card);
+  color: var(--text-dim);
+  font-weight: 600;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.rbc-month-view {
+  border: none;
+}
+
+.rbc-day-bg {
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+.rbc-day-bg:first-child {
+  border-left: none;
+}
+
+.rbc-date-cell {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.rbc-off-range-bg {
+  background-color: var(--bg-darker);
+  opacity: 0.7;
+}
+
+.rbc-today {
+  background-color: rgba(204, 255, 0, 0.1); /* Light secondary color highlight */
+}
+
+/* Event styling */
+.rbc-event {
+  background-color: var(--primary-color) !important; /* Use variable */
+  border: none !important;
+  padding: 4px 8px !important;
+  font-size: 0.85em !important;
+  color: white !important;
+}
+
+.rbc-event.rbc-selected {
+  background-color: var(--accent-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Animations */
+.animate-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.input-card.animate-in {
+  animation-delay: 0.2s;
+}
+
+.result-card.animate-in {
+  animation-delay: 0.4s;
+}
+
+.calendar-card.animate-in {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .yield-title {
+    font-size: 2.2rem !important;
+  }
+} 

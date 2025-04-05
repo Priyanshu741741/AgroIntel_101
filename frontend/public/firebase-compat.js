@@ -1,55 +1,66 @@
-// Firebase fallback/compatibility script
-// This script provides mock implementations if Firebase fails to load
+// Firebase compatibility script
+// This script provides mock implementations without requiring the real Firebase SDK
 
-(function() {
-  // Check if Firebase is already loaded
-  if (window.firebase) return;
-
-  console.warn('Firebase SDK not loaded - using mock implementation');
-
-  // Create a mock Firebase implementation for fallback
+(() => {
+  // Add a flag to indicate this is the compatibility layer
+  window._usingMockFirebase = true;
+  
+  // Mock Firebase for sites that expect the global Firebase object
   window.firebase = {
+    _isCompat: true,
     apps: [],
-    initializeApp: function() {
+    // Mock methods
+    initializeApp: () => {
       console.log('Mock Firebase initializeApp called');
       return {};
     },
-    auth: function() {
-      return {
-        onAuthStateChanged: function(callback) {
-          console.log('Mock onAuthStateChanged called');
-          callback(null);
-          return function() {};
-        },
-        signInWithEmailAndPassword: function() {
-          console.log('Mock signInWithEmailAndPassword called');
-          return Promise.resolve({});
-        },
-        createUserWithEmailAndPassword: function() {
-          console.log('Mock createUserWithEmailAndPassword called');
-          return Promise.resolve({});
-        }
-      };
-    },
-    firestore: function() {
-      return {
-        collection: function() {
-          return {
-            add: function() {
-              return Promise.resolve({
-                id: 'mock-id-' + Math.random().toString(36).substring(2, 9)
-              });
-            },
-            get: function() {
-              return Promise.resolve({
-                docs: []
-              });
-            }
-          };
-        }
-      };
-    }
+    // Auth service
+    auth: () => ({
+      onAuthStateChanged: (callback) => {
+        console.log('Mock onAuthStateChanged called');
+        callback(null);
+        return () => {};
+      },
+      signInWithEmailAndPassword: () => {
+        console.log('Mock signInWithEmailAndPassword called');
+        return Promise.resolve({});
+      },
+      createUserWithEmailAndPassword: () => {
+        console.log('Mock createUserWithEmailAndPassword called');
+        return Promise.resolve({});
+      }
+    }),
+    // Firestore service
+    firestore: () => ({
+      collection: () => ({
+        add: () => Promise.resolve({ id: `mock-id-${Math.random().toString(36).slice(2, 9)}` }),
+        get: () => Promise.resolve({ docs: [] })
+      })
+    }),
+    // Database service
+    database: () => ({
+      ref: () => ({
+        set: () => Promise.resolve(),
+        update: () => Promise.resolve(),
+        remove: () => Promise.resolve(),
+        once: () => Promise.resolve({ val: () => null })
+      })
+    }),
+    // Storage service
+    storage: () => ({
+      ref: () => ({
+        put: () => Promise.resolve({
+          ref: { getDownloadURL: () => Promise.resolve('https://mock-url.com/file.jpg') }
+        })
+      })
+    }),
+    // Other services
+    functions: () => ({ httpsCallable: () => () => Promise.resolve({ data: {} }) }),
+    messaging: () => ({ getToken: () => Promise.resolve('mock-token'), onMessage: () => {} }),
+    analytics: () => ({ logEvent: () => {} }),
+    performance: () => ({ trace: () => ({ start: () => {}, stop: () => {} }) }),
+    remoteConfig: () => ({ fetchAndActivate: () => Promise.resolve(true), getValue: () => ({ asString: () => '' }) })
   };
   
-  console.log('Firebase compatibility layer loaded');
+  console.log('Firebase compatibility layer loaded (mock implementation)');
 })(); 

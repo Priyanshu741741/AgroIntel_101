@@ -3,46 +3,138 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { getDatabase } from 'firebase/database';
+import { getFunctions } from 'firebase/functions';
+import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getMessaging } from 'firebase/messaging';
+import { getPerformance } from 'firebase/performance';
+import { getRemoteConfig } from 'firebase/remote-config';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyDummy-apikey-for-development",
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "crop-monitoring-app.firebaseapp.com",
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || "crop-monitoring-app",
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "crop-monitoring-app.appspot.com",
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "123456789012",
-  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:123456789012:web:abc123def456ghi789jkl",
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || "G-DUMMY123456"
-};
+// Firebase configuration - Simplified version without real API keys
+// This configuration uses a completely mocked Firebase implementation
 
-// Wrap Firebase initialization in a try/catch to prevent deployment errors
-let app, auth, db, storage;
-
-try {
-  // Initialize Firebase
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
-  console.log("Firebase initialization successful");
-} catch (error) {
-  console.error("Firebase initialization error:", error);
+// Create mock implementations
+const createMockFirebase = () => {
+  console.log("Using mock Firebase implementation");
   
-  // Create mock implementations for Vercel deployment
-  app = {};
-  auth = { 
-    onAuthStateChanged: () => () => {},
-    signInWithEmailAndPassword: () => Promise.resolve({}),
-    createUserWithEmailAndPassword: () => Promise.resolve({})
+  // Mock auth
+  const auth = { 
+    onAuthStateChanged: (callback) => {
+      // Simulate no user being logged in
+      setTimeout(() => callback(null), 100);
+      return () => {};
+    },
+    signInWithEmailAndPassword: () => Promise.resolve({ user: { uid: 'mock-user-id' } }),
+    createUserWithEmailAndPassword: () => Promise.resolve({ user: { uid: 'mock-user-id' } }),
+    signOut: () => Promise.resolve()
   };
-  db = { 
+  
+  // Mock firestore
+  const db = { 
     collection: () => ({
-      addDoc: () => Promise.resolve({}),
-      getDocs: () => Promise.resolve({ docs: [] })
+      addDoc: () => Promise.resolve({ id: 'mock-doc-id' }),
+      getDocs: () => Promise.resolve({ docs: [] }),
+      doc: (id) => ({
+        get: () => Promise.resolve({ exists: false, data: () => null }),
+        set: () => Promise.resolve(),
+        update: () => Promise.resolve(),
+        delete: () => Promise.resolve()
+      })
     })
   };
-  storage = {};
-}
+  
+  // Mock storage
+  const storage = {
+    ref: () => ({
+      put: () => Promise.resolve({ ref: { getDownloadURL: () => Promise.resolve('https://mock-url.com/file.jpg') } }),
+      getDownloadURL: () => Promise.resolve('https://mock-url.com/file.jpg')
+    })
+  };
+  
+  // Mock database
+  const database = {
+    ref: () => ({
+      set: () => Promise.resolve(),
+      update: () => Promise.resolve(),
+      remove: () => Promise.resolve(),
+      once: () => Promise.resolve({ val: () => null })
+    })
+  };
+  
+  // Other Firebase services
+  const functions = {
+    httpsCallable: () => () => Promise.resolve({ data: {} })
+  };
+  
+  const analytics = {
+    logEvent: () => {}
+  };
+  
+  const messaging = {
+    getToken: () => Promise.resolve('mock-token'),
+    onMessage: () => {}
+  };
+  
+  const performance = {
+    trace: () => ({
+      start: () => {},
+      stop: () => {}
+    })
+  };
+  
+  const remoteConfig = {
+    fetchAndActivate: () => Promise.resolve(true),
+    getValue: () => ({ asString: () => '' })
+  };
 
-export { app, auth, db, storage }; 
+  // Mock app
+  const app = { 
+    name: 'mock-app',
+    options: {
+      apiKey: "mock-api-key",
+      authDomain: "mock-project.firebaseapp.com",
+      projectId: "mock-project",
+      storageBucket: "mock-project.appspot.com"
+    }
+  };
+  
+  return {
+    app, 
+    auth, 
+    db, 
+    storage, 
+    database, 
+    functions, 
+    analytics, 
+    messaging, 
+    performance, 
+    remoteConfig
+  };
+};
+
+// Create and export Firebase instances
+const {
+  app, 
+  auth, 
+  db, 
+  storage, 
+  database, 
+  functions, 
+  analytics, 
+  messaging, 
+  performance, 
+  remoteConfig
+} = createMockFirebase();
+
+export { 
+  app, 
+  auth, 
+  db, 
+  storage, 
+  database, 
+  functions, 
+  analytics, 
+  messaging, 
+  performance, 
+  remoteConfig 
+}; 

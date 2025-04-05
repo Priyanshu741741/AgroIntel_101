@@ -1,7 +1,7 @@
 .agrointel-marketplace {
-  padding: 60px 0;
+  padding: 0 0 2rem 0;
   min-height: calc(100vh - 70px);
-  background-color: var(--background-color);
+  background-color: #f9f9f9;
   position: relative;
   overflow: hidden;
 }
@@ -39,43 +39,33 @@
   color: var(--text-color) !important;
   position: relative;
   z-index: 1;
+  display: inline-block;
+}
+
+.marketplace-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background-color: #4caf50;
+  border-radius: 2px;
 }
 
 .animate-text {
-  animation: fadeInUp 0.8s ease-out forwards;
-  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.animate-in {
+  animation: slideUp 0.8s ease-out;
+  opacity: 0;
+  animation-fill-mode: forwards;
 }
 
 .search-container {
   position: relative;
   z-index: 1;
-}
-
-.animate-in {
-  animation: fadeIn 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .marketplace-button {
@@ -88,6 +78,10 @@
   transition: all 0.2s ease !important;
   position: relative;
   overflow: hidden;
+  padding: 8px 20px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.5px;
 }
 
 .marketplace-button:hover {
@@ -124,25 +118,50 @@
 }
 
 .supplier-card-container {
-  animation: cardFadeIn 0.5s ease-out forwards;
-  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out;
+  animation-fill-mode: forwards;
 }
 
-@keyframes cardFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.supplier-card {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.supplier-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.supplier-card-image {
+  transition: transform 0.5s ease;
+  position: relative;
+}
+
+.supplier-card:hover .supplier-card-image {
+  transform: scale(1.05);
+}
+
+.supplier-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 4.5em;
 }
 
 .contact-button {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  border-radius: 25px;
+  font-weight: 500;
+  text-transform: none;
+  padding: 8px 16px;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
 }
 
 .contact-button::after {
@@ -161,19 +180,70 @@
   left: 100%;
 }
 
-/* Button styling */
-.MuiButton-containedPrimary {
-  background-color: var(--primary-color) !important;
-  color: white !important;
+.contact-button:hover {
+  transform: scale(1.02);
 }
 
-.MuiButton-containedPrimary:hover {
-  background-color: var(--accent-color) !important;
-  color: var(--text-color) !important;
+.favorite-icon {
+  transition: transform 0.2s ease-in-out;
+  opacity: 0.8;
 }
 
+.favorite-icon:hover {
+  transform: scale(1.2) !important;
+  opacity: 1;
+}
+
+.contact-info {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .marketplace-title {
     font-size: 2.5rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .supplier-card-container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .marketplace-title {
+    font-size: 1.5rem;
   }
 } 

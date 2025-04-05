@@ -140,58 +140,46 @@ def analyze_soil():
     # Load model if needed
     success, message = load_soil_model_if_needed()
     if not success:
-        print(f"Error loading soil model: {message}")
         return jsonify({'error': message}), 500
     
     try:
         
         # Since we've already loaded the model and data, we can proceed directly
         if soil_classes is None or soil_characteristics is None:
-            print("Error: soil_classes or soil_characteristics is None")
             return jsonify({'error': 'Model data not properly initialized'}), 500
 
         if 'image' not in request.files:
-            print("Error: No image provided in request")
             return jsonify({'error': 'No image provided'}), 400
 
         # Load and preprocess image
         image_file = request.files['image']
-        print(f"Received soil image: {image_file.filename}")
         
         # Validate file format
         allowed_extensions = {'png', 'jpg', 'jpeg'}
         if not image_file.filename or '.' not in image_file.filename or \
            image_file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
-            print(f"Invalid image format: {image_file.filename}")
             return jsonify({'error': 'Invalid image format. Allowed formats: PNG, JPG, JPEG'}), 400
         
         img = Image.open(image_file.stream).convert('RGB')
-        print(f"Opened image with size: {img.size}")
         
         # Validate image dimensions
         if img.size[0] < 50 or img.size[1] < 50:
-            print(f"Image dimensions too small: {img.size}")
             return jsonify({'error': 'Image dimensions too small. Minimum size: 50x50 pixels'}), 400
         
         # Preprocess image
         img = img.resize((224, 224))
         img_array = np.array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
-        print(f"Preprocessed image shape: {img_array.shape}")
 
         # Make prediction
         print("Making soil prediction...")
         predictions = soil_model.predict(img_array)
         predicted_class_idx = np.argmax(predictions[0])
         confidence = float(np.max(predictions[0]))
-        print(f"Raw prediction results: {predictions[0]}")
-        print(f"Predicted class index: {predicted_class_idx}, confidence: {confidence}")
         
         # Get class name and characteristics
         class_name = next((k for k, v in soil_classes.items() if v == predicted_class_idx), None)
         if not class_name:
-            print(f"Could not find class name for index {predicted_class_idx}")
-            print(f"Available soil_classes: {soil_classes}")
             return jsonify({'error': f'Could not find class name for index {predicted_class_idx}'}), 500
             
         # Get characteristics and recommendations from the soil_characteristics.json file
@@ -218,67 +206,41 @@ def analyze_soil():
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_crop():
-    try:
-        # Validate model loading
-        success, message = load_model_if_needed()
-        if not success:
-            print(f"Error loading crop model: {message}")
-            return jsonify({'error': 'Failed to initialize analysis model. Please try again later.'}), 500
-            
-        # Validate model and class indices are properly loaded
-        if model is None or class_indices is None:
-            print("Error: Model or class indices not properly initialized")
-            return jsonify({'error': 'Analysis system not properly initialized'}), 500
-        
-        if 'image' not in request.files:
-            print("Error: No image provided in request")
-            return jsonify({'error': 'No image provided'}), 400
+    success, message = load_model_if_needed()
+    if not success:
+        return jsonify({'error': message}), 500
+    
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
 
+    try:
         # Load and preprocess image
         image_file = request.files['image']
-        if not image_file or not image_file.filename:
-            print("Error: Empty image file received")
-            return jsonify({'error': 'Please select a valid image file'}), 400
-
-        print(f"Received crop image: {image_file.filename}")
         
         # Validate file format
         allowed_extensions = {'png', 'jpg', 'jpeg'}
-        file_ext = image_file.filename.rsplit('.', 1)[1].lower() if '.' in image_file.filename else ''
-        if not file_ext or file_ext not in allowed_extensions:
-            print(f"Invalid image format: {image_file.filename}")
-            return jsonify({'error': 'Please upload a PNG, JPG, or JPEG image'}), 400
+        if not image_file.filename or '.' not in image_file.filename or \
+           image_file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
+            return jsonify({'error': 'Invalid image format. Allowed formats: PNG, JPG, JPEG'}), 400
         
         img = Image.open(image_file.stream).convert('RGB')
-        print(f"Opened image with size: {img.size}")
         
         # Validate image dimensions
         if img.size[0] < 50 or img.size[1] < 50:
-            print(f"Image dimensions too small: {img.size}")
             return jsonify({'error': 'Image dimensions too small. Minimum size: 50x50 pixels'}), 400
         
         # Preprocess image
         img = img.resize((224, 224))
         img_array = np.array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
-        print(f"Preprocessed image shape: {img_array.shape}")
 
         # Make prediction
-        print("Making crop health prediction...")
         predictions = model.predict(img_array)
         predicted_class_idx = np.argmax(predictions[0])
         confidence = float(np.max(predictions[0]))
-        print(f"Raw prediction results: {predictions[0]}")
-        print(f"Predicted class index: {predicted_class_idx}, confidence: {confidence}")
         
         # Get class name
-        try:
-            predicted_class = next(k for k, v in class_indices.items() if v == predicted_class_idx)
-            print(f"Predicted class: {predicted_class}")
-        except StopIteration:
-            print(f"Could not find class name for index {predicted_class_idx}")
-            print(f"Available class_indices: {class_indices}")
-            return jsonify({'error': f'Could not find class name for index {predicted_class_idx}'}), 500
+        predicted_class = next(k for k, v in class_indices.items() if v == predicted_class_idx)
         
         # Determine health category
         health_category = None
@@ -289,14 +251,10 @@ def analyze_crop():
         
         if not health_category:
             health_category = 'unknown'
-            print(f"Could not determine health category for class: {predicted_class}")
-        else:
-            print(f"Determined health category: {health_category}")
         
         # Get recommendations
         category_recommendations = recommendations.get(health_category, recommendations['healthy'])
         
-        print(f"Crop analysis complete. Class: {predicted_class}, Health: {health_category}, Confidence: {confidence:.2f}")
         return jsonify({
             'class': predicted_class,
             'confidence': confidence,
@@ -305,7 +263,6 @@ def analyze_crop():
         })
 
     except Exception as e:
-        print(f"Error in crop analysis: {str(e)}")
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 

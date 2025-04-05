@@ -14,8 +14,13 @@ class GeminiCropChatbot:
     def __init__(self):
         self._cleanup_handler = lambda signum, frame: self.cleanup()
         # Get API key from environment variable or use the provided one
-        self.api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyDJMxmHvenLjjR0YASY15sCHYL4Zvt87Bk")
+        self.api_key = os.getenv("GOOGLE_API_KEY")
         
+        if not self.api_key:
+            print("Error: GOOGLE_API_KEY environment variable not set")
+            self.api_key_error = True
+            return
+            
         try:
             print(f"Initializing Gemini API with key: {self.api_key[:5]}...")
             

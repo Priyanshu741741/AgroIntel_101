@@ -5,11 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { app } from './firebase/config';
+// Import mock Firebase configuration
+import './firebase/config';
 
-// Initialize Firebase and check connection
-const firebaseApp = app;
-console.log("Firebase initialized:", !!firebaseApp);
+console.log("Using mock Firebase implementation for development");
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

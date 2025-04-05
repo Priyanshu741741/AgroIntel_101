@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Spinner, Alert } from 'react-bootstrap';
-import { getWeatherData } from '../services/api';
+import { getWeather } from '../services/api';
 
 const WeatherDisplay = () => {
   const [weather, setWeather] = useState(null);
@@ -37,7 +37,7 @@ const WeatherDisplay = () => {
     const fetchWeather = async () => {
       if (location.lat && location.lon) {
         try {
-          const data = await getWeatherData(location.lat, location.lon);
+          const data = await getWeather(location.lat, location.lon);
           setWeather(data);
           setLoading(false);
         } catch (err) {

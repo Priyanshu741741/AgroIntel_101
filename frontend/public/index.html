@@ -29,7 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>AgroIntel - Smart farming made simple with AI technology</title>
     
-    <!-- Firebase SDK fallback script -->
+    <!-- Firebase mock implementation - must be loaded before any other scripts -->
     <script src="%PUBLIC_URL%/firebase-compat.js"></script>
   </head>
   <body>
@@ -48,18 +48,13 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script>
-      // Check if Firebase SDK is loaded properly
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          if (!window.firebase || window.firebase._isCompat) {
-            console.warn('Firebase SDK not loaded correctly. Using compatibility layer.');
-            // Load compatibility layer if needed
-            var script = document.createElement('script');
-            script.src = '%PUBLIC_URL%/firebase-compat.js';
-            document.head.appendChild(script);
-          }
-        }, 3000); // Check after 3 seconds
-      });
+      // Make sure Firebase mock is available
+      if (!window.firebase) {
+        console.warn('Firebase mock not loaded. Attempting to load it now.');
+        var script = document.createElement('script');
+        script.src = '%PUBLIC_URL%/firebase-compat.js';
+        document.head.appendChild(script);
+      }
     </script>
     
   </body>

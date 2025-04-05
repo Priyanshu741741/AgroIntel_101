@@ -12,6 +12,8 @@ import ChatbotPage from './pages/ChatbotPage';
 import MarketplacePage from './pages/MarketplacePage';
 import TreatmentTimeline from './components/TreatmentTimeline';
 import SoilAnalysisPage from './pages/SoilAnalysisPage';
+import YieldPredictionPage from './pages/YieldPredictionPage';
+import DiseasePredictionPage from './pages/DiseasePredictionPage';
 import SplashScreen from './components/SplashScreen';
 
 // Add Google Font
@@ -52,6 +54,8 @@ function App() {
               <Route path="/soil-analysis" element={<SoilAnalysisPage />} />
               <Route path="/chatbot" element={<ChatbotPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
+              <Route path="/yield-prediction" element={<YieldPredictionPage />} />
+              <Route path="/disease-prediction" element={<DiseasePredictionPage />} />
             </Routes>
           </main>
         </Router>

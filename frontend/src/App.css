@@ -134,6 +134,17 @@ code {
   opacity: 0;
 }
 
+/* Remove whitespace between header and content for all pages */
+.agrointel-crop,
+.agrointel-soil,
+.agrointel-dashboard,
+.agrointel-marketplace,
+.agrointel-chatbot,
+.agrointel-weather {
+  padding-top: 0;
+  margin-top: 0;
+}
+
 /* Dashboard card animations */
 .upload-container, .results-container, .crop-container, .soil-container {
   animation: fadeInUp 0.8s ease-out 0.6s forwards;
@@ -387,7 +398,7 @@ input, select, textarea {
 /* App Content */
 .app-content {
   min-height: calc(100vh - 70px);
-  padding-top: 20px;
+  padding-top: 0px;
 }
 
 /* Button updates for AgroIntel look */
@@ -480,4 +491,15 @@ input, select, textarea {
 
 .feature-link:hover {
   color: var(--primary-color) !important;
+}
+
+/* Add spacing to page headers to compensate for removing the top padding */
+.dashboard-header,
+.crop-header,
+.soil-header,
+.weather-header,
+.chatbot-header,
+.marketplace-title-container {
+  padding-top: 30px;
+  margin-top: 0;
 }
