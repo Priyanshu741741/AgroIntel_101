@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api';
+// Use the environment variable for API URL or fallback to localhost for development
+const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api` : 'http://localhost:5001/api';
 
 export const analyzeImage = async (imageFile) => {
   const formData = new FormData();

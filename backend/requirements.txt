@@ -7,3 +7,10 @@ requests==2.27.1
 python-dotenv==0.20.0
 scikit-learn==1.0.2
 gunicorn==21.2.0
+# Dependencies to prevent scikit-learn build issues
+scipy==1.7.3
+joblib==1.1.0
+threadpoolctl==3.1.0
+cython==0.29.32
+# Specify --only-binary for scikit-learn to use pre-built wheels
+# This will be used in the buildCommand
