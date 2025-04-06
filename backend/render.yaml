@@ -2,7 +2,7 @@ services:
   - type: web
     name: agrointel-backend
     env: python
-    buildCommand: pip install --only-binary=scikit-learn -r requirements.txt
+    buildCommand: pip install --upgrade pip && pip install --only-binary=scikit-learn,numpy,scipy,cython -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
       - key: PYTHON_VERSION
@@ -11,6 +11,14 @@ services:
         value: 0
       - key: GRPC_POLL_STRATEGY
         value: epoll1
+      - key: OPENWEATHERMAP_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://agrointel-5089b.web.app,https://agrointel-5089b.firebaseapp.com,http://localhost:3000
+      - key: PORT
+        value: 8000
     buildFilter:
       paths:
       - requirements.txt
