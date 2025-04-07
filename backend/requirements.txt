@@ -12,5 +12,9 @@ scipy==1.7.3
 joblib==1.1.0
 threadpoolctl==3.1.0
 cython==0.29.32
-# Note: Use --only-binary=scikit-learn,numpy,scipy when installing
+# Note: Use --only-binary=scikit-learn,numpy,scipy,cython when installing
 # This prevents compilation issues on Render
+# Adding wheel to ensure binary packages are used
+wheel==0.38.4
+# Explicitly marking scikit-learn and dependencies as binary-only
+# to prevent compilation errors during deployment
