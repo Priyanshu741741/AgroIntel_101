@@ -3,7 +3,7 @@ services:
     name: agrointel-backend
     env: python
     buildCommand: pip install --upgrade pip && pip install --only-binary=:all: -r requirements.txt
-    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -19,6 +19,7 @@ services:
         value: https://agrointel-5089b.web.app,https://agrointel-5089b.firebaseapp.com,http://localhost:3000
       - key: PORT
         value: 8000
+    healthCheckPath: /health
     buildFilter:
       paths:
       - requirements.txt

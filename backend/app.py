@@ -32,6 +32,11 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+# Add a health check endpoint
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
+
 # Model paths
 CROP_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "crop_health_model")
 SOIL_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "soil_classification_model")
@@ -417,11 +422,6 @@ def get_weather():
         print(f"Error fetching weather data: {e}")
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
-
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Simple health check endpoint"""
-    return jsonify({'status': 'ok', 'message': 'Server is running'})
 
 @app.route('/api/model-info', methods=['GET'])
 def model_info():
