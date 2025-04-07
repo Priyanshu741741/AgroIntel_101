@@ -740,6 +740,6 @@ if __name__ == '__main__':
         print("Warning: Chatbot functionality is disabled due to missing modules.")
     
     # Get port from environment variable (for Render compatibility)
-    port = int(os.environ.get('PORT', 5001))
+    port = int(os.environ.get('PORT', 8000))
     print(f"Starting Flask server on port {port}...")
     app.run(host='0.0.0.0', port=port, debug=False)
