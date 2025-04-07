@@ -3,7 +3,7 @@ services:
     name: agrointel-backend
     env: python
     buildCommand: pip install --upgrade pip && pip install --only-binary=:all: -r requirements.txt
-    startCommand: python app.py
+    startCommand: gunicorn --bind 0.0.0.0:$PORT wsgi:app --timeout 120 --access-logfile - --error-logfile -
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -26,6 +26,7 @@ services:
       paths:
       - requirements.txt
       - app.py
+      - wsgi.py
       - gemini_chatbot.py
       - simple_chatbot.py
       - models/**

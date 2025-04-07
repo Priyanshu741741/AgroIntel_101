@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use the environment variable for API URL or fallback to localhost for development
-const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api` : 'http://localhost:5001/api';
+const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api` : 'http://localhost:8000/api';
 
 export const analyzeImage = async (imageFile) => {
   const formData = new FormData();
@@ -38,7 +38,7 @@ export const analyzeSoil = async (imageFile) => {
 };
 
 export const getWeather = async (lat, lon) => {
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
   try {
     const url = `${API_URL}/api/weather?lat=${lat}&lon=${lon}`;
     console.log("API: Requesting weather data from:", url);
@@ -122,7 +122,7 @@ export const sendChatMessage = async (message) => {
 
 export const getHistoricalWeather = async (lat, lon, days = 90) => {
   console.log(`API: getHistoricalWeather called with lat=${lat}, lon=${lon}, days=${days}`);
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
   
   try {
     const url = `${API_URL}/api/historical-weather?lat=${lat}&lon=${lon}&days=${days}`;
