@@ -1,18 +1,17 @@
 Flask==2.0.1
 Flask-Cors==3.0.10
 tensorflow-cpu==2.15.0
-numpy==1.22.3
+numpy==1.24.3
 Pillow==9.1.0
 requests==2.27.1
 python-dotenv==0.20.0
-# Using specific version of scikit-learn that has pre-built wheels
-scikit-learn==1.0.2
+# Using a newer version of scikit-learn that has pre-built wheels for Python 3.11
+scikit-learn==1.3.0
 gunicorn==21.2.0
 # Build dependencies
 wheel==0.38.4
 setuptools>=65.5.1
 # Dependencies with specific versions that are known to work
-scipy==1.7.3
-joblib==1.1.0
+scipy==1.10.1
+joblib==1.3.1
 threadpoolctl==3.1.0
-# Remove Cython as it's not needed with pre-built wheels
