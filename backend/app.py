@@ -16,6 +16,7 @@ import traceback
 from pathlib import Path
 from datetime import datetime, timedelta
 import random
+import sys
 
 # Add these imports for the chatbot
 try:
@@ -32,10 +33,21 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+# Print startup message for debugging
+print("Starting Flask application...")
+print(f"Python version: {sys.version}")
+print(f"Current directory: {os.getcwd()}")
+print(f"PORT environment variable: {os.environ.get('PORT', 'Not set')}")
+
 # Add a health check endpoint
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "healthy"}), 200
+
+# Add a root endpoint for basic testing
+@app.route('/', methods=['GET'])
+def root():
+    return jsonify({"status": "AgroIntel API is running"}), 200
 
 # Model paths
 CROP_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "crop_health_model")
@@ -727,5 +739,7 @@ if __name__ == '__main__':
     else:
         print("Warning: Chatbot functionality is disabled due to missing modules.")
     
-    print("Starting Flask server...")
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    # Get port from environment variable (for Render compatibility)
+    port = int(os.environ.get('PORT', 5001))
+    print(f"Starting Flask server on port {port}...")
+    app.run(host='0.0.0.0', port=port, debug=False)
